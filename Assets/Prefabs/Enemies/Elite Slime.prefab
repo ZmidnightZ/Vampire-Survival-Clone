@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8867893003374934043}
   - component: {fileID: 8959106280220133501}
+  - component: {fileID: 2896872547233191887}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -91,6 +92,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &2896872547233191887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2848889522764051608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e6b0def9a2a444eab743d6ce77b0dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFlip
+  player: {fileID: 0}
 --- !u!1 &5070523023027722905
 GameObject:
   m_ObjectHideFlags: 0

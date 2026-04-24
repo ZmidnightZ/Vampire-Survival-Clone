@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4043077684812113736}
   - component: {fileID: 5916677962852783139}
+  - component: {fileID: 3932832514963913801}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -91,6 +92,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &3932832514963913801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589810357485407350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e6b0def9a2a444eab743d6ce77b0dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFlip
+  player: {fileID: 0}
 --- !u!1 &6276548738997069053
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +118,6 @@ GameObject:
   - component: {fileID: 4857223457455063812}
   - component: {fileID: 866946964845787786}
   - component: {fileID: 6287646339337656583}
-  - component: {fileID: 8579894769033221613}
   m_Layer: 6
   m_Name: Elite Wolf
   m_TagString: Enemy
@@ -231,23 +244,3 @@ MonoBehaviour:
   speed: 0.5
   minSize: 0.9
   maxSize: 1.1
---- !u!114 &8579894769033221613
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6276548738997069053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69e19061612a51e439df104633be0fe6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChargingEnemyMovement
-  windUpTime: 0.9
-  chargeDuration: 1.2
-  speed: 6
-  spawnOffscreenAndCross: 1
-  crossSpeedMultiplier: 3
-  crossMargin: 1
-  isWindingUp: 0
-  isCharging: 0

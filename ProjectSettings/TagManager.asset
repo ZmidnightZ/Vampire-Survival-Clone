@@ -2,9 +2,10 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -60,3 +61,5 @@ TagManager:
   - name: UI
     uniqueID: 1572613189
     locked: 0
+  m_RenderingLayers:
+  - Default
