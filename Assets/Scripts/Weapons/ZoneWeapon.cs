@@ -6,28 +6,33 @@ public class ZoneWeapon : Weapon
 
     private float spawnTime, spawnCounter;
 
-    // Start is called before the first frame update
     void Start()
     {
         SetStats();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (statsUpdated == true)
+        if (statsUpdated)
         {
             statsUpdated = false;
-
             SetStats();
         }
 
         spawnCounter -= Time.deltaTime;
-        if(spawnCounter <= 0f)
+
+        if (spawnCounter <= 0f)
         {
             spawnCounter = spawnTime;
 
-            Instantiate(damager, damager.transform.position, Quaternion.identity, transform).gameObject.SetActive(true);
+            EnemyDamager newZone = Instantiate(damager, transform.position, Quaternion.identity, transform);
+
+            newZone.damageAmount = stats[weaponLevel].damage;
+            newZone.lifeTime = stats[weaponLevel].duration;
+            newZone.timeBetweenDamage = stats[weaponLevel].speed;
+            newZone.transform.localScale = Vector3.one * stats[weaponLevel].range;
+
+            newZone.gameObject.SetActive(true);
 
             SFXManager.instance.PlaySFXPitched(10);
         }
@@ -35,15 +40,7 @@ public class ZoneWeapon : Weapon
 
     void SetStats()
     {
-        damager.damageAmount = stats[weaponLevel].damage;
-        damager.lifeTime = stats[weaponLevel].duration;
-
-        damager.timeBetweenDamage = stats[weaponLevel].speed;
-
-        damager.transform.localScale = Vector3.one * stats[weaponLevel].range;
-
         spawnTime = stats[weaponLevel].timeBetweenAttacks;
-
         spawnCounter = 0f;
     }
 }

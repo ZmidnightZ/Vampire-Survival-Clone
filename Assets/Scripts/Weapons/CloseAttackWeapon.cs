@@ -1,58 +1,100 @@
-using System.Collections;
 using UnityEngine;
 
 public class CloseAttackWeapon : Weapon
 {
     public EnemyDamager damager;
 
-    private float attackCounter, direction;
+    private float attackCounter;
 
-    // Start is called before the first frame update
+    // Store last direction player moved
+    // 1 = right, -1 = left
+    private float lastDirection = 1f;
+
     void Start()
     {
         SetStats();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        // If weapon level changed → update stats
         if (statsUpdated == true)
         {
             statsUpdated = false;
-
             SetStats();
         }
 
+        float input = Input.GetAxisRaw("Horizontal");
+
+        // If player presses left or right, update direction
+        if (input > 0)
+        {
+            lastDirection = 1f; // facing right
+        }
+        else if (input < 0)
+        {
+            lastDirection = -1f; // facing left
+        }
+
         attackCounter -= Time.deltaTime;
-        if(attackCounter <= 0)
+
+        if (attackCounter <= 0)
         {
             attackCounter = stats[weaponLevel].timeBetweenAttacks;
 
-            direction = Input.GetAxisRaw("Horizontal");
+            Attack();
 
-            if (direction != 0)
-            {
-                if(direction > 0)
-                {
-                    damager.transform.rotation = Quaternion.identity;
-                } else
-                {
-                    damager.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
-                }
-                
-            }
-
-            Instantiate(damager, damager.transform.position, damager.transform.rotation, transform).gameObject.SetActive(true);
-
-            for (int i = 1; i < stats[weaponLevel].amount; i++)
-            {
-                float rot = (360f / stats[weaponLevel].amount) * i;
-
-                Instantiate(damager, damager.transform.position, Quaternion.Euler(0f, 0f, damager.transform.rotation.eulerAngles.z + rot), transform).gameObject.SetActive(true);
-
-            }
-
+            // Play sound
             SFXManager.instance.PlaySFXPitched(9);
+        }
+    }
+
+    void Attack()
+    {
+        // Decide main direction
+        float angle;
+
+        if (lastDirection == 1f)
+            angle = 0f;      // right
+        else
+            angle = 180f;    // left
+
+        // Attack main side
+        SpawnSide(angle);
+
+        // Unlock second side at higher level
+        if (weaponLevel >= 4)
+        {
+            if (angle == 0f)
+                SpawnSide(180f); // also attack left
+            else
+                SpawnSide(0f);   // also attack right
+        }
+    }
+
+    void SpawnSide(float angle)
+    {
+        float amount = stats[weaponLevel].amount;
+
+        float spacing = 0.5f;
+
+        for (int i = 0; i < amount; i++)
+        {
+            // Base horizontal position
+            Vector3 offset = new Vector3(i * spacing, 0f, 0f);
+
+            // Add vertical randomness (THIS IS YOUR LINE)
+            offset.y = Random.Range(-0.2f, 0.2f);
+
+            // Flip if attacking left
+            if (angle == 180f)
+            {
+                offset.x = -offset.x;
+            }
+
+            Quaternion rot = Quaternion.Euler(0f, 0f, angle);
+
+            Instantiate(damager,transform.position + offset,rot,transform).gameObject.SetActive(true);
         }
     }
 
@@ -61,8 +103,10 @@ public class CloseAttackWeapon : Weapon
         damager.damageAmount = stats[weaponLevel].damage;
         damager.lifeTime = stats[weaponLevel].duration;
 
+        // Increase size = increase range
         damager.transform.localScale = Vector3.one * stats[weaponLevel].range;
 
+        // Attack immediately after upgrade
         attackCounter = 0f;
     }
 }

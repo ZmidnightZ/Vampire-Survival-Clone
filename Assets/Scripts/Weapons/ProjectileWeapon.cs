@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileWeapon : Weapon
@@ -10,45 +11,84 @@ public class ProjectileWeapon : Weapon
     public float weaponRange;
     public LayerMask whatIsEnemy;
 
-    // Start is called before the first frame update
     void Start()
     {
         SetStats();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (statsUpdated == true)
         {
             statsUpdated = false;
-
             SetStats();
         }
 
         shotCounter -= Time.deltaTime;
-        if(shotCounter <= 0)
+
+        if (shotCounter <= 0)
         {
             shotCounter = stats[weaponLevel].timeBetweenAttacks;
 
-            Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, weaponRange * stats[weaponLevel].range, whatIsEnemy);
-            if(enemies.Length > 0)
+            Collider2D[] enemies = Physics2D.OverlapCircleAll(
+                transform.position,
+                weaponRange * stats[weaponLevel].range,
+                whatIsEnemy
+            );
+
+            if (enemies.Length > 0)
             {
-                for(int i = 0; i < stats[weaponLevel].amount; i++)
+                // Get sorted enemies (nearest first)
+                List<Transform> nearestEnemies = GetNearestEnemies(enemies);
+
+                float amount = stats[weaponLevel].amount;
+
+                for (int i = 0; i < amount; i++)
                 {
-                    Vector3 targetPosition = enemies[Random.Range(0, enemies.Length)].transform.position;
+                    // Loop back if fewer enemies than shots
+                    Transform target = nearestEnemies[i % nearestEnemies.Count];
 
-                    Vector3 direction = targetPosition - transform.position;
-                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                    angle -= 90;
-                    projectile.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-                    Instantiate(projectile, projectile.transform.position, projectile.transform.rotation).gameObject.SetActive(true);
+                    ShootAtTarget(target);
                 }
 
                 SFXManager.instance.PlaySFXPitched(6);
             }
         }
+    }
+
+    void ShootAtTarget(Transform target)
+    {
+        Vector3 direction = target.position - transform.position;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        angle -= 90f;
+
+        // Optional spread (feel free to tweak or remove)
+        float spread = Random.Range(-5f, 5f);
+
+        Quaternion rotation = Quaternion.AngleAxis(angle + spread, Vector3.forward);
+
+        Instantiate(projectile, transform.position, rotation)
+            .gameObject.SetActive(true);
+    }
+
+    List<Transform> GetNearestEnemies(Collider2D[] enemies)
+    {
+        List<Transform> sortedEnemies = new List<Transform>();
+
+        foreach (Collider2D enemy in enemies)
+        {
+            sortedEnemies.Add(enemy.transform);
+        }
+
+        sortedEnemies.Sort((a, b) =>
+        {
+            float distA = Vector2.Distance(transform.position, a.position);
+            float distB = Vector2.Distance(transform.position, b.position);
+            return distA.CompareTo(distB);
+        });
+
+        return sortedEnemies;
     }
 
     void SetStats()
