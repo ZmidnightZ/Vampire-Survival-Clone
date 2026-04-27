@@ -2,19 +2,31 @@ using UnityEngine;
 
 public class ThrownWeapon : MonoBehaviour
 {
-    public float throwPower;
-    public Rigidbody2D theRB;
-    public float rotateSpeed;
+    public float throwUpForce = 8f;
+    public float throwSideForce = 2f;
+    public float rotateSpeed = 300f;
 
-    // Start is called before the first frame update
+    private Rigidbody2D rb;
+
     void Start()
     {
-        theRB.linearVelocity = new Vector2(Random.Range(-throwPower, throwPower), throwPower);
+        rb = GetComponent<Rigidbody2D>();
+
+        float x = Random.Range(-throwSideForce, throwSideForce);
+        float y = throwUpForce;
+
+        rb.linearVelocity = new Vector2(x, y);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.Euler(0f, 0f, transform.rotation.eulerAngles.z + (rotateSpeed * 360f * Time.deltaTime * Mathf.Sign(theRB.linearVelocity.x)));
+        if (rb.linearVelocity.x > 0)
+        {
+            transform.Rotate(0f, 0f, -rotateSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime);
+        }
     }
 }

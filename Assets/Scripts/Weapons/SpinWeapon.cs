@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SpinWeapon : Weapon
 {
@@ -11,36 +12,51 @@ public class SpinWeapon : Weapon
 
     public EnemyDamager damager;
 
-    // Start is called before the first frame update
+    private List<Transform> activeFireballs = new List<Transform>();
+
+    private bool isActive = false;   
+
     void Start()
     {
         SetStats();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        holder.rotation = Quaternion.Euler(0f, 0f, holder.rotation.eulerAngles.z + (rotateSpeed * Time.deltaTime * stats[weaponLevel].speed));
+        holder.rotation = Quaternion.Euler(0f,0f,holder.rotation.eulerAngles.z +(rotateSpeed * Time.deltaTime * stats[weaponLevel].speed));
 
-        spawnCounter -= Time.deltaTime;
-        if(spawnCounter <= 0)
+        if (isActive)
         {
-            spawnCounter = timeBetweenSpawn;
-
-            for(int i = 0; i < stats[weaponLevel].amount; i++)
+            if (holder.childCount == 0)
             {
-                float rot = (360f / stats[weaponLevel].amount) * i;
+                isActive = false;
+                spawnCounter = timeBetweenSpawn; 
+            }
+        }
+        else
+        {
+            spawnCounter -= Time.deltaTime;
 
-                Instantiate(fireballToSpawn, fireballToSpawn.position, Quaternion.Euler(0f, 0f, rot), holder).gameObject.SetActive(true);
+            if (spawnCounter <= 0)
+            {
+                spawnCounter = timeBetweenSpawn;
 
-                SFXManager.instance.PlaySFX(8);
+                for (int i = 0; i < stats[weaponLevel].amount; i++)
+                {
+                    float rot = (360f / stats[weaponLevel].amount) * i;
+
+                    Instantiate(fireballToSpawn,holder.position,Quaternion.Euler(0f, 0f, rot),holder).gameObject.SetActive(true);
+
+                    SFXManager.instance.PlaySFX(8);
+                }
+
+                isActive = true;
             }
         }
 
-        if(statsUpdated == true)
+        if (statsUpdated)
         {
             statsUpdated = false;
-
             SetStats();
         }
     }
@@ -55,6 +71,6 @@ public class SpinWeapon : Weapon
 
         damager.lifeTime = stats[weaponLevel].duration;
 
-        spawnCounter = 0f;
+        spawnCounter = Mathf.Min(spawnCounter, timeBetweenSpawn);
     }
 }

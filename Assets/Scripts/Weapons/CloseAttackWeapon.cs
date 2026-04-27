@@ -63,7 +63,7 @@ public class CloseAttackWeapon : Weapon
         SpawnSide(angle);
 
         // Unlock second side at higher level
-        if (weaponLevel >= 4)
+        if (weaponLevel >= 5)
         {
             if (angle == 0f)
                 SpawnSide(180f); // also attack left
@@ -82,9 +82,6 @@ public class CloseAttackWeapon : Weapon
         {
             // Base horizontal position
             Vector3 offset = new Vector3(i * spacing, 0f, 0f);
-
-            // Add vertical randomness (THIS IS YOUR LINE)
-            offset.y = Random.Range(-0.2f, 0.2f);
 
             // Flip if attacking left
             if (angle == 180f)

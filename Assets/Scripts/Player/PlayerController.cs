@@ -27,9 +27,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (assignedWeapons.Count == 0)
+        if (assignedWeapons.Count == 0 && unassignedWeapons.Count > 0)
         {
-            AddWeapon(Random.Range(0, unassignedWeapons.Count));
+            int randIndex = Random.Range(0, Mathf.Min(5, unassignedWeapons.Count));
+
+            Weapon startingWeapon = unassignedWeapons[randIndex];
+
+            AddWeapon(startingWeapon);
+
+            // Level it up once so player doesn't need to unlock it
+            startingWeapon.LevelUp();
         }
         // Ensure purchased stats are applied (in case of load order differences)
         if (PlayerStatController.instance != null)
@@ -45,11 +52,7 @@ public class PlayerController : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
 
-        //Debug.Log(moveInput);
-
         moveInput.Normalize();
-
-        //Debug.Log(moveInput);
 
         transform.position += moveInput * moveSpeed * Time.deltaTime;
 

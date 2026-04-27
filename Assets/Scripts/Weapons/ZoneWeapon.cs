@@ -4,7 +4,10 @@ public class ZoneWeapon : Weapon
 {
     public EnemyDamager damager;
 
-    private float spawnTime, spawnCounter;
+    private float spawnCounter;
+    private float spawnDelay = 0.5f;
+
+    private EnemyDamager currentZone;
 
     void Start()
     {
@@ -19,28 +22,39 @@ public class ZoneWeapon : Weapon
             SetStats();
         }
 
+        // If zone still exists → do nothing
+        if (currentZone != null)
+        {
+            return;
+        }
+
+        // Wait for blink delay
         spawnCounter -= Time.deltaTime;
 
         if (spawnCounter <= 0f)
         {
-            spawnCounter = spawnTime;
-
-            EnemyDamager newZone = Instantiate(damager, transform.position, Quaternion.identity, transform);
-
-            newZone.damageAmount = stats[weaponLevel].damage;
-            newZone.lifeTime = stats[weaponLevel].duration;
-            newZone.timeBetweenDamage = stats[weaponLevel].speed;
-            newZone.transform.localScale = Vector3.one * stats[weaponLevel].range;
-
-            newZone.gameObject.SetActive(true);
-
-            SFXManager.instance.PlaySFXPitched(10);
+            SpawnZone();
         }
+    }
+
+    void SpawnZone()
+    {
+        currentZone = Instantiate(damager, transform.position, Quaternion.identity, transform);
+
+        currentZone.damageAmount = stats[weaponLevel].damage;
+        currentZone.lifeTime = stats[weaponLevel].duration;
+        currentZone.timeBetweenDamage = stats[weaponLevel].speed;
+        currentZone.transform.localScale = Vector3.one * stats[weaponLevel].range;
+
+        currentZone.gameObject.SetActive(true);
+
+        spawnCounter = spawnDelay;
+
+        SFXManager.instance.PlaySFXPitched(10);
     }
 
     void SetStats()
     {
-        spawnTime = stats[weaponLevel].timeBetweenAttacks;
         spawnCounter = 0f;
     }
 }

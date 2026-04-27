@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChargingEnemyMovement
   windUpTime: 0.9
   chargeDuration: 1.2
-  speed: 6
+  speed: 4
   spawnOffscreenAndCross: 1
   crossSpeedMultiplier: 3
   crossMargin: 1
