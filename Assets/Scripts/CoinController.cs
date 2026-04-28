@@ -8,7 +8,7 @@ public class CoinController : MonoBehaviour
     {
         instance = this;
         // Load saved coins
-        SaveSystem.LoadCoins();
+        SaveSystem.LoadAll();
     }
 
     public int currentCoins;

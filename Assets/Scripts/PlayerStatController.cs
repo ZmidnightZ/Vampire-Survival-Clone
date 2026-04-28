@@ -8,7 +8,7 @@ public class PlayerStatController : MonoBehaviour
     {
         instance = this;
         // Load purchased stat levels from saved data
-        SaveSystem.LoadStats();
+        SaveSystem.SaveAll();
     }
 
     public List<PlayerStatValue> moveSpeed, health, pickupRange, maxWeapons;
