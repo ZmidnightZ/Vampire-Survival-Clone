@@ -7,13 +7,18 @@ public class CoinController : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        // Load saved coins
-        SaveSystem.LoadAll();
     }
 
     public int currentCoins;
 
     public CoinPickup coin;
+
+    public void Start()
+    {
+        // Load saved coins
+        SaveSystem.LoadAll();
+        UIController.instance.UpdateCoins();
+    }
 
     public void AddCoins(int coinsToAdd)
     {
@@ -35,6 +40,11 @@ public class CoinController : MonoBehaviour
     public void SpendCoins(int coinsToSpend)
     {
         currentCoins -= coinsToSpend;
+
+        if (currentCoins < 0)
+        {
+            currentCoins = 0;
+        }
 
         UIController.instance.UpdateCoins();
         SaveSystem.SaveAll();

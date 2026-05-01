@@ -645,6 +645,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Vampire
 
+    +
+
     Survival'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e3c5ddcb3d0110648a2ac9935012c4a9, type: 2}
@@ -672,7 +674,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 269.25
+  m_fontSize: 179.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
