@@ -7,8 +7,6 @@ public class PlayerStatController : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        // Load purchased stat levels from saved data
-        SaveSystem.SaveAll();
     }
 
     public List<PlayerStatValue> moveSpeed, health, pickupRange, maxWeapons;
@@ -92,7 +90,6 @@ public class PlayerStatController : MonoBehaviour
         UpdateDisplay();
 
         PlayerController.instance.moveSpeed = moveSpeed[moveSpeedLevel].value;
-        SaveSystem.SaveAll();
     }
 
     public void PurchaseHealth()
@@ -103,7 +100,6 @@ public class PlayerStatController : MonoBehaviour
 
         PlayerHealthController.instance.maxHealth = health[healthLevel].value;
         PlayerHealthController.instance.currentHealth += health[healthLevel].value - health[healthLevel - 1].value;
-        SaveSystem.SaveAll();
     }
 
     public void PurchasePickupRange()
@@ -113,7 +109,6 @@ public class PlayerStatController : MonoBehaviour
         UpdateDisplay();
 
         PlayerController.instance.pickupRange = pickupRange[pickupRangeLevel].value;
-        SaveSystem.SaveAll();
     }
 
     public void PurchaseMaxWeapons()
@@ -123,7 +118,6 @@ public class PlayerStatController : MonoBehaviour
         UpdateDisplay();
 
         PlayerController.instance.maxWeapons = Mathf.RoundToInt(maxWeapons[maxWeaponsLevel].value);
-        SaveSystem.SaveAll();
     }
 
     // Apply purchased stat levels to active player controllers

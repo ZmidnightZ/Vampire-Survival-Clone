@@ -41,15 +41,20 @@ public class LevelManager : MonoBehaviour
     {
         yield return new WaitForSeconds(waitToShowEndScreen);
 
-        // Save high score (longer time = better)
         SaveSystem.TrySetHighScore(timer);
+        SaveSystem.SaveAll();
+
         if (UIController.instance != null)
+        {
+            float minutes = Mathf.FloorToInt(timer / 60f);
+            float seconds = Mathf.FloorToInt(timer % 60);
+
+            UIController.instance.endTimeText.text =
+                minutes + " mins " + seconds.ToString("00") + " secs";
+
+            UIController.instance.levelEndScreen.SetActive(true);
+
             UIController.instance.UpdateHighScoreDisplay();
-
-        float minutes = Mathf.FloorToInt(timer / 60f);
-        float seconds = Mathf.FloorToInt(timer % 60);
-
-        UIController.instance.endTimeText.text = minutes.ToString() + " mins " + seconds.ToString("00" + " secs");
-        UIController.instance.levelEndScreen.SetActive(true);
+        }
     }
 }

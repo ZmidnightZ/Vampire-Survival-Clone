@@ -3,15 +3,15 @@ using UnityEngine;
 
 public static class SaveSystem
 {
-    private static string savePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"MyGame","save.json");
+    private static string savePath =
+        Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
+        "MyGame", "save.json");
 
-    private static bool hasLoaded = false;
-
+    // ---------------- SAVE ----------------
     public static void SaveAll()
     {
         SaveData data = new SaveData();
 
-        // Collect data
         if (CoinController.instance != null)
             data.coins = CoinController.instance.currentCoins;
 
@@ -25,33 +25,16 @@ public static class SaveSystem
 
         data.highScore = GetHighScore();
 
-        // Convert to JSON
         string json = JsonUtility.ToJson(data, true);
 
-        string folder = Path.GetDirectoryName(savePath);
-
-        if (!Directory.Exists(folder))
-        {
-            Directory.CreateDirectory(folder);
-        }
-
-        // Save to file
         File.WriteAllText(savePath, json);
-
-        Debug.Log("Game Saved to: " + savePath);
     }
 
+    // ---------------- LOAD ----------------
     public static void LoadAll()
     {
-        if (hasLoaded) return;
-
-        hasLoaded = true;
-
         if (!File.Exists(savePath))
-        {
-            Debug.Log("No save file found");
             return;
-        }
 
         string json = File.ReadAllText(savePath);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
@@ -68,21 +51,12 @@ public static class SaveSystem
         }
 
         SetHighScore(data.highScore);
-
-        if (UIController.instance != null)
-        {
-            UIController.instance.UpdateCoins();
-            UIController.instance.UpdateHighScoreDisplay();
-        }
     }
-    // ---------------- HIGH SCORE ----------------
 
+    // ---------------- HIGH SCORE ----------------
     private static float highScore = 0f;
 
-    public static float GetHighScore()
-    {
-        return highScore;
-    }
+    public static float GetHighScore() => highScore;
 
     public static void SetHighScore(float value)
     {
@@ -92,41 +66,7 @@ public static class SaveSystem
     public static void TrySetHighScore(float score)
     {
         if (score > highScore)
-        {
             highScore = score;
-        }
-    }
-
-    // ---------------- RESET ----------------
-
-    public static void ResetData()
-    {
-        if (File.Exists(savePath))
-        {
-            File.Delete(savePath);
-        }
-
-        // Reset runtime values
-        if (CoinController.instance != null)
-            CoinController.instance.currentCoins = 0;
-
-        if (PlayerStatController.instance != null)
-        {
-            PlayerStatController.instance.moveSpeedLevel = 0;
-            PlayerStatController.instance.healthLevel = 0;
-            PlayerStatController.instance.pickupRangeLevel = 0;
-            PlayerStatController.instance.maxWeaponsLevel = 0;
-        }
-
-        highScore = 0;
-
-        if (UIController.instance != null)
-        {
-            UIController.instance.UpdateCoins();
-            UIController.instance.UpdateHighScoreDisplay();
-        }
-
-        Debug.Log("Save data reset");
     }
 }
 

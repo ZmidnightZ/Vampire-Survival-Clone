@@ -8,6 +8,7 @@ public class CoinController : MonoBehaviour
     {
         instance = this;
     }
+
     private void Start()
     {
         SaveSystem.LoadAll();
@@ -18,15 +19,14 @@ public class CoinController : MonoBehaviour
 
     public CoinPickup coin;
 
-    public void AddCoins(int coinsToAdd)
+    public void AddCoins(int amount)
     {
-        currentCoins += coinsToAdd;
-
+        currentCoins += amount;
         UIController.instance.UpdateCoins();
 
         SFXManager.instance.PlaySFXPitched(2);
-        SaveSystem.SaveAll();
     }
+
 
     public void DropCoin(Vector3 position, int value)
     {
@@ -35,16 +35,13 @@ public class CoinController : MonoBehaviour
         newCoin.gameObject.SetActive(true);
     }
 
-    public void SpendCoins(int coinsToSpend)
+    public void SpendCoins(int amount)
     {
-        currentCoins -= coinsToSpend;
+        currentCoins -= amount;
 
         if (currentCoins < 0)
-        {
             currentCoins = 0;
-        }
 
         UIController.instance.UpdateCoins();
-        SaveSystem.SaveAll();
     }
 }
