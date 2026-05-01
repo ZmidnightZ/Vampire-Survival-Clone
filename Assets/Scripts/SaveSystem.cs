@@ -4,6 +4,9 @@ using UnityEngine;
 public static class SaveSystem
 {
     private static string savePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"MyGame","save.json");
+
+    private static bool hasLoaded = false;
+
     public static void SaveAll()
     {
         SaveData data = new SaveData();
@@ -40,6 +43,10 @@ public static class SaveSystem
 
     public static void LoadAll()
     {
+        if (hasLoaded) return;
+
+        hasLoaded = true;
+
         if (!File.Exists(savePath))
         {
             Debug.Log("No save file found");
@@ -49,7 +56,6 @@ public static class SaveSystem
         string json = File.ReadAllText(savePath);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-        // Apply data
         if (CoinController.instance != null)
             CoinController.instance.currentCoins = data.coins;
 
@@ -63,14 +69,12 @@ public static class SaveSystem
 
         SetHighScore(data.highScore);
 
-        // Update UI
         if (UIController.instance != null)
         {
             UIController.instance.UpdateCoins();
             UIController.instance.UpdateHighScoreDisplay();
         }
     }
-
     // ---------------- HIGH SCORE ----------------
 
     private static float highScore = 0f;

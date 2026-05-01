@@ -8,17 +8,15 @@ public class CoinController : MonoBehaviour
     {
         instance = this;
     }
+    private void Start()
+    {
+        SaveSystem.LoadAll();
+        UIController.instance.UpdateCoins();
+    }
 
     public int currentCoins;
 
     public CoinPickup coin;
-
-    public void Start()
-    {
-        // Load saved coins
-        SaveSystem.LoadAll();
-        UIController.instance.UpdateCoins();
-    }
 
     public void AddCoins(int coinsToAdd)
     {
