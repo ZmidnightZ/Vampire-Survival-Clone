@@ -68,6 +68,29 @@ public static class SaveSystem
         if (score > highScore)
             highScore = score;
     }
+
+    public static void ResetData()
+    {
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+        }
+
+        if (CoinController.instance != null)
+            CoinController.instance.currentCoins = 0;
+
+        if (PlayerStatController.instance != null)
+        {
+            PlayerStatController.instance.moveSpeedLevel = 0;
+            PlayerStatController.instance.healthLevel = 0;
+            PlayerStatController.instance.pickupRangeLevel = 0;
+            PlayerStatController.instance.maxWeaponsLevel = 0;
+        }
+
+        SetHighScore(0);
+
+        Debug.Log("Save data reset");
+    }
 }
 
 [System.Serializable]

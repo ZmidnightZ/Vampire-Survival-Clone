@@ -33,9 +33,7 @@ public class PlayerController : MonoBehaviour
             Weapon startingWeapon = unassignedWeapons[randIndex];
 
             AddWeapon(startingWeapon);
-
-            // Level it up once so player doesn't need to unlock it
-            startingWeapon.LevelUp();
+            startingWeapon.weaponLevel = 1;
         }
         // Ensure purchased stats are applied (in case of load order differences)
         if (PlayerStatController.instance != null)
@@ -65,17 +63,25 @@ public class PlayerController : MonoBehaviour
 
     public void AddWeapon(int weaponNumber)
     {
-        if(weaponNumber < unassignedWeapons.Count)
+        if (weaponNumber < unassignedWeapons.Count)
         {
-            assignedWeapons.Add(unassignedWeapons[weaponNumber]);
+            Weapon weapon = unassignedWeapons[weaponNumber];
 
-            unassignedWeapons[weaponNumber].gameObject.SetActive(true);
+            weapon.weaponLevel = 1;
+            weapon.statsUpdated = false;
+
+            assignedWeapons.Add(weapon);
+
+            weapon.gameObject.SetActive(true);
             unassignedWeapons.RemoveAt(weaponNumber);
         }
     }
 
     public void AddWeapon(Weapon weaponToAdd)
     {
+        weaponToAdd.weaponLevel = 1;
+        weaponToAdd.statsUpdated = false;
+
         weaponToAdd.gameObject.SetActive(true);
 
         assignedWeapons.Add(weaponToAdd);
